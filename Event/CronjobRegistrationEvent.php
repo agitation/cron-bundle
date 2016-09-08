@@ -1,30 +1,22 @@
 <?php
-/**
- * @package    agitation/cron
- * @link       http://github.com/agitation/AgitCronBundle
- * @author     Alex Günsche <http://www.agitsol.com/>
- * @copyright  2012-2015 AGITsol GmbH
- * @license    http://opensource.org/licenses/MIT
- */
 
 namespace Agit\CronBundle\Event;
 
+use Agit\CronBundle\Command\CronExecuteCommand;
 use Symfony\Component\EventDispatcher\Event;
-use Agit\CronBundle\Cron\CronService;
-use Agit\CronBundle\Cron\CronAwareInterface;
 
 class CronjobRegistrationEvent extends Event
 {
-    private $cronService;
+    private $cronCommand;
 
-    public function __construct(CronService $cronService)
+    public function __construct(CronExecuteCommand $cronCommand)
     {
-        $this->cronService = $cronService;
+        $this->cronCommand = $cronCommand;
     }
 
-    public function registerCronjob(CronAwareInterface $cronAwareService, $cronTime)
+    public function registerCronjob($cronTime, Callable $callback)
     {
-        $this->cronService->parseCronTime($cronTime);
-        $this->cronService->registerCronjob($cronAwareService, $cronTime);
+        if ($this->cronCommand->cronApplies($cronTime))
+            call_user_func($callback);
     }
 }

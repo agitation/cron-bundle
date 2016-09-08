@@ -1,16 +1,16 @@
 <?php
-/**
- * @package    agitation/cron
- * @link       http://github.com/agitation/AgitCronBundle
- * @author     Alex Günsche <http://www.agitsol.com/>
- * @copyright  2012-2015 AGITsol GmbH
+
+/*
+ * @package    agitation/base-bundle
+ * @link       http://github.com/agitation/base-bundle
+ * @author     Alexander Günsche
  * @license    http://opensource.org/licenses/MIT
  */
 
 namespace Agit\CronBundle\Tests\Cron;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Agit\CronBundle\Cron\CronService;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CronServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class CronServiceTest extends \PHPUnit_Framework_TestCase
     public function testParseCronTime($cronTime, $expectedResult)
     {
         $cronService = new CronService(new EventDispatcher());
-        $this->assertEquals($expectedResult, $cronService->parseCronTime($cronTime));
+        $this->assertSame($expectedResult, $cronService->parseCronTime($cronTime));
     }
 
     /**
@@ -60,7 +60,7 @@ class CronServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['* * * * *', [null, null, null, null, null]],
-            ['*/15 * * * *', [[0,15,30,45], null, null, null, null]],
+            ['*/15 * * * *', [[0, 15, 30, 45], null, null, null, null]],
             ['* 6,12,18 * * *', [null, [6, 12, 18], null, null, null]]
         ];
     }

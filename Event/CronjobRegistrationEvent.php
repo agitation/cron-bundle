@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * @package    agitation/base-bundle
+ * @link       http://github.com/agitation/base-bundle
+ * @author     Alexander Günsche
+ * @license    http://opensource.org/licenses/MIT
+ */
+
 namespace Agit\CronBundle\Event;
 
 use Agit\CronBundle\Command\CronExecuteCommand;
@@ -14,9 +21,10 @@ class CronjobRegistrationEvent extends Event
         $this->cronCommand = $cronCommand;
     }
 
-    public function registerCronjob($cronTime, Callable $callback)
+    public function registerCronjob($cronTime, callable $callback)
     {
-        if ($this->cronCommand->cronApplies($cronTime))
+        if ($this->cronCommand->cronApplies($cronTime)) {
             call_user_func($callback);
+        }
     }
 }

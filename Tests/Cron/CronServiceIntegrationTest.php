@@ -1,16 +1,16 @@
 <?php
-/**
- * @package    agitation/cron
- * @link       http://github.com/agitation/AgitCronBundle
- * @author     Alex Günsche <http://www.agitsol.com/>
- * @copyright  2012-2015 AGITsol GmbH
+
+/*
+ * @package    agitation/base-bundle
+ * @link       http://github.com/agitation/base-bundle
+ * @author     Alexander Günsche
  * @license    http://opensource.org/licenses/MIT
  */
 
 namespace Agit\CronBundle\Tests\Cron;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Agit\CronBundle\Cron\CronService;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CronServiceIntegrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,13 +31,10 @@ class CronServiceIntegrationTest extends \PHPUnit_Framework_TestCase
         // but here we must call it directly to have our service registered
         $cronService->registerCronjob($cronAwareService, '* * * * *');
 
-        try
-        {
+        try {
             $cronService->run();
-        }
-        catch(\Exception $e)
-        {
-            $this->assertEquals("Cronjob execution triggered.", $e->getMessage());
+        } catch (\Exception $e) {
+            $this->assertSame("Cronjob execution triggered.", $e->getMessage());
         }
     }
 }

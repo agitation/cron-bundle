@@ -1,18 +1,18 @@
 <?php
 
 /*
- * @package    agitation/cron-bundle
- * @link       http://github.com/agitation/cron-bundle
+ * @package    agitation/base-bundle
+ * @link       http://github.com/agitation/base-bundle
  * @author     Alexander Günsche
  * @license    http://opensource.org/licenses/MIT
  */
 
 namespace Agit\CronBundle\Command;
 
-use DateTime;
 use Agit\BaseBundle\Command\SingletonCommandTrait;
 use Agit\BaseBundle\Exception\InternalErrorException;
 use Agit\CronBundle\Event\CronjobRegistrationEvent;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,7 +41,9 @@ class CronExecuteCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (! $this->flock(__FILE__)) return;
+        if (! $this->flock(__FILE__)) {
+            return;
+        }
 
         $dateTime = new DateTime();
 

@@ -1,8 +1,8 @@
 <?php
 
 /*
- * @package    agitation/base-bundle
- * @link       http://github.com/agitation/base-bundle
+ * @package    agitation/cron-bundle
+ * @link       http://github.com/agitation/cron-bundle
  * @author     Alexander Günsche
  * @license    http://opensource.org/licenses/MIT
  */

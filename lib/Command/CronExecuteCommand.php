@@ -19,13 +19,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CronExecuteCommand extends ContainerAwareCommand
 {
-    const EVENT_REGISTRATION_KEY = "agit.cron.register";
-
     use SingletonCommandTrait;
 
-    private $eventDispatcher;
-
-    private $serviceList = [];
+    private $cronjobs = [];
 
     // min/max values for minute, hour, day, month, weekday
     private $ranges = [[0, 59], [0, 23], [1, 31], [1, 12], [0, 6]];
@@ -37,6 +33,11 @@ class CronExecuteCommand extends ContainerAwareCommand
         $this
             ->setName("agit:cronjobs:execute")
             ->setDescription("Executes all registered cronjobs that are registered for the current cycle.");
+    }
+
+    public function addCronjob($cronTime, $service, $method)
+    {
+        $this->cronjobs[] = [$cronTime, $service, $method];
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,10 +56,13 @@ class CronExecuteCommand extends ContainerAwareCommand
             (int) $dateTime->format("w")
         ];
 
-        $this->getContainer()->get("event_dispatcher")->dispatch(
-            self::EVENT_REGISTRATION_KEY,
-            new CronjobRegistrationEvent($this)
-        );
+        foreach ($this->cronjobs as $cronjob)
+        {
+            list($cronTime, $service, $method) = $cronjob;
+
+            if ($this->cronApplies($cronTime))
+                call_user_func([$service, $method]);
+        }
     }
 
     public function cronApplies($cronTime)

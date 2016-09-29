@@ -1,4 +1,4 @@
 services:
     agit.cron:
-        class: Agit\CronBundle\Cron\CronService
-        arguments: [ "@event_dispatcher" ]
+        class: Agit\CronBundle\Command\CronExecuteCommand
+        tags: [{ name: console.command }]

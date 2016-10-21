@@ -11,7 +11,6 @@ namespace Agit\CronBundle\Command;
 
 use Agit\BaseBundle\Command\SingletonCommandTrait;
 use Agit\BaseBundle\Exception\InternalErrorException;
-use Agit\CronBundle\Event\CronjobRegistrationEvent;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,12 +55,12 @@ class CronExecuteCommand extends ContainerAwareCommand
             (int) $dateTime->format("w")
         ];
 
-        foreach ($this->cronjobs as $cronjob)
-        {
+        foreach ($this->cronjobs as $cronjob) {
             list($cronTime, $service, $method) = $cronjob;
 
-            if ($this->cronApplies($cronTime))
+            if ($this->cronApplies($cronTime)) {
                 call_user_func([$service, $method]);
+            }
         }
     }
 

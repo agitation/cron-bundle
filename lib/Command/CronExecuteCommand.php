@@ -12,8 +12,11 @@ namespace Agit\CronBundle\Command;
 use Agit\BaseBundle\Command\SingletonCommandTrait;
 use Agit\BaseBundle\Exception\InternalErrorException;
 use DateTime;
+use Exception;
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CronExecuteCommand extends ContainerAwareCommand
@@ -31,7 +34,8 @@ class CronExecuteCommand extends ContainerAwareCommand
     {
         $this
             ->setName("agit:cronjobs:execute")
-            ->setDescription("Executes all registered cronjobs that are registered for the current cycle.");
+            ->setDescription("Executes all registered cronjobs that are registered for the current cycle.")
+            ->addOption("log", "l", InputOption::VALUE_NONE, "Adds a log entry whenever cronjobs were executed. Use only for testing, to avoid polluting the log file. Note: Errors are always logged.");
     }
 
     public function addCronjob($cronTime, $service, $method)
@@ -46,6 +50,7 @@ class CronExecuteCommand extends ContainerAwareCommand
         }
 
         $dateTime = new DateTime();
+        $logger = $this->getContainer()->has("logger") ? $this->getContainer()->get("logger") : null;
 
         $this->now = [
             (int) $dateTime->format("i"),
@@ -55,11 +60,24 @@ class CronExecuteCommand extends ContainerAwareCommand
             (int) $dateTime->format("w")
         ];
 
+        if ($logger && $input->getOption("log")) {
+            $logger->log(LogLevel::INFO, "Running cronjobs.");
+        }
+
         foreach ($this->cronjobs as $cronjob) {
             list($cronTime, $service, $method) = $cronjob;
 
             if ($this->cronApplies($cronTime)) {
-                call_user_func([$service, $method]);
+                try {
+                    call_user_func([$service, $method]);
+                } catch (Exception $e) {
+                    if ($logger) {
+                        $logger->log(LogLevel::ERROR, sprintf(
+                            "Error while executing cronjob %s.%s: %s",
+                            get_class($service), $method, $e->getMessage()
+                        ));
+                    }
+                }
             }
         }
     }

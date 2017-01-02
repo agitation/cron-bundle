@@ -1,4 +1,8 @@
 services:
-    agit.cron:
-        class: Agit\CronBundle\Command\CronExecuteCommand
+    agit.crontab:
+        class: Agit\CronBundle\Command\GenerateCrontabCommand
+        tags: [{ name: console.command }]
+
+    agit.cronjob:
+        class: Agit\CronBundle\Command\ExecuteCronjobCommand
         tags: [{ name: console.command }]

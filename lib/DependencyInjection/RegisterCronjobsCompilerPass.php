@@ -11,7 +11,6 @@ namespace Agit\CronBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
 
 class RegisterCronjobsCompilerPass implements CompilerPassInterface
 {
@@ -19,12 +18,14 @@ class RegisterCronjobsCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $containerBuilder)
     {
-        $processor = $containerBuilder->findDefinition("agit.cron");
+        $crontabProcessor = $containerBuilder->findDefinition("agit.crontab");
+        $cronjobProcessor = $containerBuilder->findDefinition("agit.cronjob");
         $services = $containerBuilder->findTaggedServiceIds("agit.cronjob");
 
         foreach ($services as $name => $tags) {
             foreach ($tags as $tag) {
-                $processor->addMethodCall("addCronjob", [$tag["schedule"], new Reference($name), $tag["method"]]);
+                $crontabProcessor->addMethodCall("addCronjob", [$tag["schedule"], $name, $tag["method"]]);
+                $cronjobProcessor->addMethodCall("addCronjob", [$name, $tag["method"]]);
             }
         }
     }

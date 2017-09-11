@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/cron-bundle
  * @link       http://github.com/agitation/cron-bundle
@@ -18,14 +18,16 @@ class RegisterCronjobsCompilerPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $containerBuilder)
     {
-        $crontabProcessor = $containerBuilder->findDefinition("agit.crontab");
-        $cronjobProcessor = $containerBuilder->findDefinition("agit.cronjob");
-        $services = $containerBuilder->findTaggedServiceIds("agit.cronjob");
+        $crontabProcessor = $containerBuilder->findDefinition('agit.crontab');
+        $cronjobProcessor = $containerBuilder->findDefinition('agit.cronjob');
+        $services = $containerBuilder->findTaggedServiceIds('agit.cronjob');
 
-        foreach ($services as $name => $tags) {
-            foreach ($tags as $tag) {
-                $crontabProcessor->addMethodCall("addCronjob", [$tag["schedule"], $name, $tag["method"]]);
-                $cronjobProcessor->addMethodCall("addCronjob", [$name, $tag["method"]]);
+        foreach ($services as $name => $tags)
+        {
+            foreach ($tags as $tag)
+            {
+                $crontabProcessor->addMethodCall('addCronjob', [$tag['schedule'], $name, $tag['method']]);
+                $cronjobProcessor->addMethodCall('addCronjob', [$name, $tag['method']]);
             }
         }
     }

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/cron-bundle
  * @link       http://github.com/agitation/cron-bundle
@@ -16,6 +16,8 @@ class CronServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider providerValidCronTimes
+     * @param mixed $cronTime
+     * @param mixed $expectedResult
      */
     public function testParseCronTime($cronTime, $expectedResult)
     {
@@ -25,6 +27,7 @@ class CronServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerInvalidCronTimes
+     * @param mixed $cronTime
      */
     public function testParseCronTimeException($cronTime)
     {
@@ -36,22 +39,24 @@ class CronServiceTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider providerCronAppliesTrue
+     * @param mixed $cronTime
      */
     public function testCronAppliesTrue($cronTime)
     {
         $cronService = new CronService(new EventDispatcher());
-        $cronService->setDate(new \DateTime("2015-09-30 12:15"));
+        $cronService->setDate(new \DateTime('2015-09-30 12:15'));
 
         $this->assertTrue($cronService->cronApplies($cronTime));
     }
 
     /**
      * @dataProvider providerCronAppliesFalse
+     * @param mixed $cronTime
      */
     public function testCronAppliesFalse($cronTime)
     {
         $cronService = new CronService(new EventDispatcher());
-        $cronService->setDate(new \DateTime("2015-09-30 12:15"));
+        $cronService->setDate(new \DateTime('2015-09-30 12:15'));
 
         $this->assertFalse($cronService->cronApplies($cronTime));
     }

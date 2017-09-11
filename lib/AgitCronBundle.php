@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * @package    agitation/cron-bundle
  * @link       http://github.com/agitation/cron-bundle

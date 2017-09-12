@@ -70,7 +70,7 @@ class GenerateCrontabCommand extends ContainerAwareCommand
 
     private function parseCronTime($cronTime)
     {
-        $cronParts = preg_split("|\s+|", $cronTime, null, PREG_SPLIT_NO_EMPTY);
+        $cronParts = preg_split("|\s+|", $cronTime, -1, PREG_SPLIT_NO_EMPTY);
 
         if (count($cronParts) !== 5)
         {

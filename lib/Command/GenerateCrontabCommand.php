@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace Agit\CronBundle\Command;
 
-use Agit\BaseBundle\Exception\InternalErrorException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -75,7 +74,7 @@ class GenerateCrontabCommand extends ContainerAwareCommand
 
         if (count($cronParts) !== 5)
         {
-            throw new InternalErrorException('Invalid cron time.');
+            throw new Exception('Invalid cron time.');
         }
 
         $parsedParts = [];
@@ -105,14 +104,14 @@ class GenerateCrontabCommand extends ContainerAwareCommand
                 }
                 else
                 {
-                    throw new InternalErrorException("Invalid cron time parameter at position $pos.");
+                    throw new Exception("Invalid cron time parameter at position $pos.");
                 }
 
                 foreach ($elements as $element)
                 {
                     if ($element < $this->ranges[$pos][0] || $element > $this->ranges[$pos][1])
                     {
-                        throw new InternalErrorException("Invalid cron time parameter at position $pos.");
+                        throw new Exception("Invalid cron time parameter at position $pos.");
                     }
                 }
 
